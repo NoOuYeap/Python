@@ -1,0 +1,107 @@
+import turtle
+import math
+import random
+
+player = turtle.Turtle()
+player.shape("turtle")
+screen = player.getscreen()
+
+target1 = turtle.Turtle()
+target2 = turtle.Turtle()
+target3 = turtle.Turtle() # 표적 만들기
+
+target1.shape("circle")
+target2.shape("circle")
+target3.shape("circle")
+
+target1.penup()
+target2.penup()
+target3.penup() # 표적 이동중에 선을 그리지 않기위해
+
+target1.goto(random.randint(100,400),random.randint(0,250))
+
+target2.goto(random.randint(100,400),random.randint(0,250))
+target3.goto(random.randint(100,400),random.randint(0,250))
+
+velocity = 50 # 날아가는 속도
+
+player.write(velocity,False,'center',("",20))
+
+def speedDown():
+    global velocity
+    velocity = velocity - 1
+    player.clear() # 글자를 지우고 다시 쓰기위해
+    player.write(velocity,False,'center',("",20))
+    return velocity
+
+def speedUp():
+    global velocity
+    velocity = velocity + 1
+    player.clear()
+    player.write(velocity,False,'center',("",20))
+    return velocity
+
+def turnLeft():
+    if player.heading() < 90:
+	    player.left(5) # 뒤로 꺾이게 하지 않기 위한 if문
+
+		
+def turnRight():
+    if player.heading() > 0:
+	    player.right(5) # 밑으로 꺾이게 하지 않기위해
+
+		
+def ReStart():
+    target1.hideturtle()
+    target2.hideturtle()
+    target3.hideturtle()
+    target1.goto(random.randint(100,400),random.randint(0,250))
+    target2.goto(random.randint(100,400),random.randint(0,250))
+    target3.goto(random.randint(100,400),random.randint(0,250))
+    target1.showturtle()
+    target2.showturtle()
+    target3.showturtle()
+
+	
+def fire():
+    x = 0
+    y = 0
+    angle = player.heading()
+    global velocity
+    vx = velocity * math.cos(angle*3.14/180.0)
+    vy = velocity * math.sin(angle*3.14/180.0)
+    while player.ycor() >= -4.0:
+	    vx = vx
+	    vy = vy - 10
+	    x = x + vx
+	    y = y + vy
+	    player.goto(x,y)
+	    if player.ycor() < 0:
+		    player.reset()
+		    player.write(velocity,False,'center',("",20))
+		    break # 재 발사
+	    if player.distance(target1.xcor(), target1.ycor()) < 15: # 충돌
+		    target1.hideturtle()
+		    player.reset()
+		    player.write(velocity,False,'center',("",20))
+		    break
+	    if player.distance(target2.xcor(), target2.ycor()) < 15:
+		    target2.hideturtle()
+		    player.reset()
+		    player.write(velocity,False,'center',("",20))
+		    break
+	    if player.distance(target3.xcor(), target3.ycor()) < 15:
+		    target3.hideturtle()
+		    player.reset()
+		    player.write(velocity,False,'center',("",20))
+		    break
+
+		
+screen.onkeypress(speedDown,"Down")
+screen.onkeypress(speedUp,"Up")
+screen.onkeypress(turnLeft,"Left")
+screen.onkeypress(turnRight,"Right")
+screen.onkeypress(ReStart, "r")
+screen.onkeypress(fire,"space")
+screen.listen()
+
