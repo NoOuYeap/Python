@@ -12,7 +12,7 @@ target3 = turtle.Turtle() # 표적 만들기
 
 target1.shape("circle")
 target2.shape("circle")
-target3.shape("circle")
+target3.shape("circle") #공 
 
 target1.penup()
 target2.penup()
